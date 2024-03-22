@@ -8,6 +8,7 @@ import com.morpheusdata.core.providers.WorkloadProvisionProvider
 import com.morpheusdata.model.ComputeServer
 import com.morpheusdata.model.Icon
 import com.morpheusdata.model.OptionType
+import com.morpheusdata.model.ProcessEvent
 import com.morpheusdata.model.ServicePlan
 import com.morpheusdata.model.StorageVolumeType
 import com.morpheusdata.model.Workload
@@ -249,11 +250,15 @@ class ProxmoxVeProvisionProvider extends AbstractProvisionProvider implements Wo
 		log.info("In runWorkload...")
 		Thread.sleep(10000)
 
+		context.async.process.startProcessStep(workloadRequest.process , new ProcessEvent(type: ProcessEvent.ProcessType.general), 'configuring')
+
 		ComputeServer server = workload.server
 		Cloud cloud = server.cloud
 		Map authConfig = plugin.getAuthConfig(cloud)
 		HttpApiClient client = new HttpApiClient()
 		String nodeId = workload.server.getConfigProperty('proxmoxNode') ?: null
+
+		context.async.process.startProcessStep(workloadRequest.process, new ProcessEvent(type: ProcessEvent.ProcessType.provisionDeploy), 'Deploying Instance').blockingGet()
 
 		log.info("Provisioning/cloning: ${workload.getInstance().name} from Image Id: $server.sourceImage.externalId on node: $nodeId")
 		ServiceResponse rtn = ProxmoxComputeUtil.cloneTemplate(client, authConfig, server.sourceImage.externalId, workload.getInstance().name, nodeId)
