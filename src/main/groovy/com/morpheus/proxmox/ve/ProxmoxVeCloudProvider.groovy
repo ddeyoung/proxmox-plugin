@@ -277,10 +277,7 @@ class ProxmoxVeCloudProvider implements CloudProvider {
 	 * @return ServiceResponse
 	 */
 	@Override
-	ServiceResponse validate(Cloud cloudInfo, ValidateCloudRequest validateCloudRequest) {
-		
-		return ServiceResponse.success()
-		
+	ServiceResponse validate(Cloud cloudInfo, ValidateCloudRequest validateCloudRequest) {	
 		log.info("validate: {}", cloudInfo)
 		try {
 			if(!cloudInfo) {
