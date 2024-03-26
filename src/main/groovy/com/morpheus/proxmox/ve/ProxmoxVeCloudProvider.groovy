@@ -181,7 +181,9 @@ class ProxmoxVeCloudProvider implements CloudProvider {
 				gatewayEditable   : false,
 				vlanIdEditable    : false,
 				canAssignPool     : true,
-				name              : 'Proxmox VE Bridge Network'
+				name              : 'Proxmox VE Bridge Network',
+				hasNetworkServer  : true,
+				creatable: true
 		])
 
 		return [bridgeNetwork]
@@ -276,6 +278,9 @@ class ProxmoxVeCloudProvider implements CloudProvider {
 	 */
 	@Override
 	ServiceResponse validate(Cloud cloudInfo, ValidateCloudRequest validateCloudRequest) {
+		
+		return ServiceResponse.success()
+		
 		log.info("validate: {}", cloudInfo)
 		try {
 			if(!cloudInfo) {
@@ -328,6 +333,10 @@ class ProxmoxVeCloudProvider implements CloudProvider {
 	 */
 	@Override
 	ServiceResponse initializeCloud(Cloud cloudInfo) {
+		
+		plugin.getNetworkProvider().initializeProvider(cloudInfo)
+
+
 		return ServiceResponse.success()
 	}
 
