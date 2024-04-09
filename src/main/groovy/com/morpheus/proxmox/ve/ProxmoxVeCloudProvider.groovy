@@ -505,6 +505,11 @@ class ProxmoxVeCloudProvider implements CloudProvider {
 		return ProxmoxVeProvisionProvider.PROVISION_PROVIDER_CODE
 	}
 
+	@Override
+	String getDefaultNetworkServerTypeCode() {
+		return 'proxmox-ve.network'
+	}
+
 	/**
 	 * Returns the Morpheus Context for interacting with data stored in the Main Morpheus Application
 	 * @return an implementation of the MorpheusContext for running Future based rxJava queries

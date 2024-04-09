@@ -26,7 +26,7 @@ class ProxmoxNetworkProvider implements NetworkProvider, CloudInitializationProv
 	MorpheusContext morpheus
 	SecurityGroupProvider securityGroupProvider
 
-	final String code = 'proxmox'
+	final String code = 'proxmox-ve.network'
 	final String name = 'Proxmox'
 	final String description = 'Proxmox'
 
@@ -37,7 +37,7 @@ class ProxmoxNetworkProvider implements NetworkProvider, CloudInitializationProv
 
 	@Override
 	String getNetworkServerTypeCode() {
-		return 'proxmox-ve.network'
+		return 'proxmox'
 	}
 
 	/**
@@ -127,6 +127,26 @@ class ProxmoxNetworkProvider implements NetworkProvider, CloudInitializationProv
 		return rtn
 	}
 
+	@Override
+	ServiceResponse prepareNetwork(Network network, Map opts) {
+		log.info("prepare network")
+		return ServiceResponse.success(network)
+	}
+
+	@Override
+	ServiceResponse<Network> validateNetwork(Network network, Map opts) {
+		log.info("validate network")
+		ServiceResponse<Network> rtn = ServiceResponse.success(network)
+
+		rtn.addError("cidr", "CIDR is required")
+
+		if(rtn.errors.size() > 0) {
+			rtn.success = false
+		}
+
+		return rtn
+	}
+
 	/**
 	 * Creates the Network submitted
 	 * @param network Network information
@@ -135,6 +155,7 @@ class ProxmoxNetworkProvider implements NetworkProvider, CloudInitializationProv
 	 */
 	@Override
 	ServiceResponse createNetwork(Network network, Map opts) {
+		log.info("Create network")
 		return ServiceResponse.success(network)
 	}
 
@@ -146,6 +167,7 @@ class ProxmoxNetworkProvider implements NetworkProvider, CloudInitializationProv
 	 */
 	@Override
 	ServiceResponse<Network> updateNetwork(Network network, Map opts) {
+		log.info("updateNetwork")
 		return ServiceResponse.success(network)
 	}
 
